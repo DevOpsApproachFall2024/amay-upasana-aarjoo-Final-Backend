@@ -97,7 +97,11 @@ prefix '/api/users' => sub {
         });
     };
 
-    
+    get '/profile' => sub {
+        my $user_id = session('user_id');
+        my $user = $collection->find_one({ _id => MongoDB::OID->new(value => $user_id) });
+        return  $json->encode(prepare_for_json($user));
+    };
 
     
 };
