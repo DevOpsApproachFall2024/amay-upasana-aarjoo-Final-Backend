@@ -103,7 +103,10 @@ prefix '/api/users' => sub {
         return  $json->encode(prepare_for_json($user));
     };
 
-    
+    post '/logout' => sub {
+        app->destroy_session;
+        return  $json->encode({ success => 1, message => 'Logged out successfully' });
+    };
 };
 
 1;
