@@ -12,7 +12,7 @@ use TriviaApp::Utils qw(prepare_for_json);
 
 my $json = JSON::MaybeXS->new(allow_blessed => 1, convert_blessed => 1);
 
-my $client = MongoDB->connect("mongodb://localhost:27017");
+my $client = MongoDB->connect("mongodb://mongo:27017");
 my $database = $client->get_database('trivia_app');
 my $collection = $database->get_collection('users');
 

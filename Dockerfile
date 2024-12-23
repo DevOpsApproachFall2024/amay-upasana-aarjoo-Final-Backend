@@ -1,20 +1,21 @@
-# Use a Perl base image
 FROM perl:5.36
 
-# Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy the application files first
-COPY . .
+RUN cpanm --notest \
+    Dancer2 \
+    Plack \
+    Crypt::PBKDF2 \
+    Plack::Test \
+    HTTP::Request::Common \
+    JSON \
+    JSON::MaybeXS \
+    MongoDB \
+    FindBin \
+    Test::More \
+    Plack::Util
 
-# Install required Perl modules
-RUN cpanm --notest --installdeps .
 
-# Install Plack if not already included in dependencies
-RUN cpanm --notest Plack
-
-# Expose the application port
 EXPOSE 5000
 
-# Start the application
 CMD ["plackup", "--host", "0.0.0.0", "-p", "5000", "./bin/app.psgi"]
