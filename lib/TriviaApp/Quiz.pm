@@ -54,7 +54,10 @@ prefix '/api/quiz' => sub {
         return $json->encode(prepare_for_json(\@questions));
     };
 
-    
+    get '/:id' => sub {
+        my $question = $collection->find_one({ _id => MongoDB::OID->new(value => params->{id}) });
+        return $json->encode(prepare_for_json($question));
+    };
 
     
     
