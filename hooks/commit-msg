@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Define the pattern for valid commit messages
+COMMIT_MSG_REGEX="^(feat|fix|chore|docs|style|refactor|perf|test|ci)(\([a-zA-Z0-9-]+\))?: .+"
+
+# Get the commit message
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Check if the commit message matches the pattern
+if ! echo "$COMMIT_MSG" | grep -qE "$COMMIT_MSG_REGEX"; then
+    echo "ERROR: Invalid commit message format."
+    echo "Commit message must follow the format: <type>(<scope>): <message>"
+    exit 1
+fi
+
+# Allow commit to proceed if message format is valid
+exit 0

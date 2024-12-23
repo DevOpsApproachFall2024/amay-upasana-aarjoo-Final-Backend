@@ -1,0 +1,42 @@
+name: Testing Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  lint-testing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Perl
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y perl
+          sudo cpan App::cpanminus  # Install cpanminus if not available
+          cpanm --notest --installdeps .     # Install the necessary Perl modules from cpanfile or Makefile.PL
+
+      - name: Test Code Linting
+        run: |
+          sudo apt-get install -y libperl-critic-perl
+          cpanm --notest Perl::Critic
+          cpanm --notest Perl::Critic::Command
+          cpanm --notest Perl::Critic::Utils
+          echo "done installing Perl::Critic"
+          export PATH="/home/runner/perl5/bin${PATH:+:${PATH}}"
+          echo "done setting PATH"
+          perlcritic --profile perlcriticrc lib/
+
+      - name: Test Code Testing
+        run: |
+          cpanm Test::More  # Install the Test::More module if needed
+          perl -MTest::More tests/test.pl
+

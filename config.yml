@@ -1,0 +1,5 @@
+session: "Simple"
+session_expires: 86400 
+session_name: "trivia.session"
+session_secure: 1
+session_httponly: 1

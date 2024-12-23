@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Run linting and testing before committing
+echo "Running linting checks..."
+perlcritic --profile perlcriticrc lib/
+
+# If linting fails, abort the commit
+if [ $? -ne 0 ]; then
+    echo "Linting failed! Commit aborted."
+    exit 1
+fi
+
+perl -MTest::More tests/test.pl
+
+# If testing fails, abort the commit
+if [ $? -ne 0 ]; then
+    echo "Testing failed! Commit aborted."
+    exit 1
+fi
+
+# Continue with commit if linting passes
+echo "Linting passed! Proceeding with commit."
+exit 0
