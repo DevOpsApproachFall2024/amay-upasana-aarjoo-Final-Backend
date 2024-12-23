@@ -66,6 +66,36 @@ prefix '/api/users' => sub {
         return  $json->encode({ success => 1, message => 'User registered successfully' });
     };
 
+    post '/login' => sub {
+        my $data = from_json(request->body);
+
+        unless ($data->{email} && $data->{password}) {
+            status 400;
+            return  $json->encode({ error => 'Email and password required' });
+        }
+
+        my $user = $collection->find_one({ email => $data->{email} });
+        unless ($user) {
+            status 401;
+            return  $json->encode({ error => 'Invalid credentials' });
+        }
+
+        unless ($pbkdf2->validate($user->{password}, $data->{password})) {
+            status 401;
+            return  $json->encode({ error => 'Invalid credentials' });
+        }
+
+        session user_id => $user->{_id}->hex;
+        session email   => $user->{email};
+
+        return  $json->encode({
+            success => 1,
+            user    => {
+                id    => $user->{_id}->hex,
+                email => $user->{email},
+            },
+        });
+    };
 
     
 
