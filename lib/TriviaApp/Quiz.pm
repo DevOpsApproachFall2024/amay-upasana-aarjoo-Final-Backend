@@ -49,7 +49,11 @@ prefix '/api/quiz' => sub {
         };
     };
 
-    
+    get '/' => sub {
+        my @questions = $collection->find()->all;
+        return $json->encode(prepare_for_json(\@questions));
+    };
+
     
 
     
