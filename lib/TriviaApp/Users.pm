@@ -41,5 +41,35 @@ hook 'before' => sub {
     }
 };
 
+prefix '/api/users' => sub {
+    post '/register' => sub {
+        my $data = from_json(request->body);
+
+        unless ($data->{email} && $data->{password}) {
+            status 400;
+            return  $json->encode({ error => 'Email and password required' });
+        }
+
+        if ($collection->find_one({ email => $data->{email} })) {
+            status 409;
+            return  $json->encode({ error => 'Email already registered' });
+        }
+
+        my $hashed_password = $pbkdf2->generate($data->{password});
+        $collection->insert_one({
+            email      => $data->{email},
+            password   => $hashed_password,
+            created_at => time(),
+        });
+
+        status 201;
+        return  $json->encode({ success => 1, message => 'User registered successfully' });
+    };
+
+
+    
+
+    
+};
 
 1;
