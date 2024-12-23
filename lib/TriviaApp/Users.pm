@@ -28,9 +28,10 @@ my $pbkdf2 = Crypt::PBKDF2->new(
 # Middleware to check authentication
 hook 'before' => sub {
     # Skip authentication for login and register routes
-    if (request->path_info =~ m{^/api/users/(login|register)$}) {
-        return;
-    }
+    if (request->path_info =~ m{^/api/(users/(login|register)|quiz/import)$}) {
+        return
+        }
+
     
     # Check for protected routes
     if (request->path_info =~ m{^/api/}) {
@@ -90,9 +91,9 @@ prefix '/api/users' => sub {
 
         return  $json->encode({
             success => 1,
-            user    => {
-                id    => $user->{_id}->hex,
-                email => $user->{email},
+            user => {
+            id => $user->{_id}->hex,
+            email => $user->{email},
             },
         });
     };
