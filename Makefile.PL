@@ -10,6 +10,8 @@ my @prereqs = (
     'JSON::MaybeXS' => '0',
     'Dancer2::Plugin::JWT' => '0',
     'Crypt::PBKDF2' => '0',
+    'Test::MockModule' => '0',
+    'Test::More' => '0',
 );
 
 # Create the Makefile
