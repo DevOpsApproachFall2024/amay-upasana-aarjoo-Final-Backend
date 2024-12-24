@@ -19,6 +19,9 @@ my $collection = $database->get_collection('quiz');
 my $results = $database->get_collection('results');
 
 prefix '/api/quiz' => sub {
+    options qr{.*} => sub {
+        return '';
+    };
 
 
     get '/import' => sub {

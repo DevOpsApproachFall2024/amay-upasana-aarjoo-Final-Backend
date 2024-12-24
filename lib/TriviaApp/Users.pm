@@ -16,6 +16,9 @@ my $client = MongoDB->connect("mongodb://mongo:27017");
 my $database = $client->get_database('trivia_app');
 my $collection = $database->get_collection('users');
 
+
+
+
 my $pbkdf2 = Crypt::PBKDF2->new(
     hash_class => 'HMACSHA2',
     hash_args => {
@@ -27,6 +30,28 @@ my $pbkdf2 = Crypt::PBKDF2->new(
 
 # Middleware to check authentication
 hook 'before' => sub {
+    # Cors
+    my $app = shift;
+    
+    # Allow requests from any origin
+    response_header 'Access-Control-Allow-Origin' => 'http://localhost:8080';
+    
+    # Allow specific HTTP methods
+    response_header 'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS';
+    
+    # Allow specific headers
+    response_header 'Access-Control-Allow-Headers' => 'Content-Type, Authorization';
+    
+    # Allow credentials (if needed)
+    response_header 'Access-Control-Allow-Credentials' => 'true';
+    
+    # Handle preflight OPTIONS requests
+    if (request->method eq 'OPTIONS') {
+        # Set preflight cache duration (in seconds)
+        response_header 'Access-Control-Max-Age' => '3600';
+        return halt();
+    }
+
     # Skip authentication for login and register routes
     if (request->path_info =~ m{^/api/(users/(login|register)|quiz/import)$}) {
         return
@@ -40,9 +65,14 @@ hook 'before' => sub {
             return halt($json->encode({ error => 'Authentication required' }));
         }
     }
+    
 };
 
 prefix '/api/users' => sub {
+    options qr{.*} => sub {
+        return '';
+    };
+
     post '/register' => sub {
         my $data = from_json(request->body);
 
