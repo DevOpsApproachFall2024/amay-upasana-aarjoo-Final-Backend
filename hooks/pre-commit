@@ -10,14 +10,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-perl -MTest::More tests/test.pl
-
-# If testing fails, abort the commit
-if [ $? -ne 0 ]; then
-    echo "Testing failed! Commit aborted."
-    exit 1
-fi
-
 # Continue with commit if linting passes
 echo "Linting passed! Proceeding with commit."
 exit 0

@@ -21,8 +21,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y perl
+          sudo apt-get install -y build-essential
           sudo cpan App::cpanminus  # Install cpanminus if not available
-          cpanm --notest --installdeps .     # Install the necessary Perl modules from cpanfile or Makefile.PL
+          cpanm --sudo --notest --installdeps .     # Install the necessary Perl modules from cpanfile or Makefile.PL
 
       - name: Test Code Linting
         run: |
@@ -37,6 +38,7 @@ jobs:
 
       - name: Test Code Testing
         run: |
-          cpanm Test::More  # Install the Test::More module if needed
+          cpanm --sudo Test::More 
+          cpanm --sudo --notest Plack::Test
           perl -MTest::More tests/test.pl
 
