@@ -2,19 +2,9 @@ FROM perl:5.36
 
 WORKDIR /app
 
-RUN cpanm --notest \
-    Dancer2 \
-    Plack \
-    Crypt::PBKDF2 \
-    Plack::Test \
-    HTTP::Request::Common \
-    JSON \
-    JSON::MaybeXS \
-    MongoDB \
-    FindBin \
-    Test::More \
-    Test::MockModule \
-    Plack::Util
+COPY cpanfile .
+
+RUN cpanm --notest --installdeps .
 
 
 EXPOSE 5000
