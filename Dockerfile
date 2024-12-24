@@ -13,6 +13,7 @@ RUN cpanm --notest \
     MongoDB \
     FindBin \
     Test::More \
+    Test::MockModule \
     Plack::Util
 
 
